@@ -16,9 +16,14 @@ RUN set -eux && \
 	unzip protoc-${PROTOC_VERSION}-linux-x86_64.zip -d protoc && \
 	rm protoc-${PROTOC_VERSION}-linux-x86_64.zip
 
+# target: api-common-protos
+FROM gcr.io/gapic-images/api-common-protos:latest AS api-common-protos
+
 # target: protoc
 FROM gcr.io/distroless/static:nonroot AS protoc
-COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/ /usr/local/
+COPY --from=api-common-protos --chown=nonroot:nonroot /protos/google/ /usr/local/include/google/
+COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/bin/ /usr/local/bin/
+COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/include/google/protobuf/*.proto /usr/local/include/google/protobuf/
 LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.title="containerz/protoc/protoc" \
       org.opencontainers.image.description="protoc container image" \
@@ -28,7 +33,9 @@ ENTRYPOINT ["protoc"]
 
 # target: protoc-debug
 FROM gcr.io/distroless/base:debug-nonroot AS protoc-debug
-COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/ /usr/local/
+COPY --from=api-common-protos --chown=nonroot:nonroot /protos/google/ /usr/local/include/google/
+COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/bin/ /usr/local/bin/
+COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/include/google/protobuf/*.proto /usr/local/include/google/protobuf/
 LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.title="containerz/protoc/protoc" \
       org.opencontainers.image.description="protoc container image" \
@@ -51,7 +58,7 @@ RUN set -eux && \
 
 # target: golang
 FROM gcr.io/distroless/static:nonroot AS golang
-COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/ /usr/local/
+COPY --from=protoc --chown=nonroot:nonroot /usr/local/ /usr/local/
 COPY --from=golang-builder --chown=nonroot:nonroot /out/ /
 LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.title="containerz/protoc/golang" \
@@ -62,7 +69,7 @@ ENTRYPOINT ["protoc"]
 
 # target: golang-debug
 FROM gcr.io/distroless/base:debug-nonroot AS golang-debug
-COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/ /usr/local/
+COPY --from=protoc-debug --chown=nonroot:nonroot /usr/local/ /usr/local/
 COPY --from=golang-builder --chown=nonroot:nonroot /out/ /
 LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.title="containerz/protoc/golang" \
