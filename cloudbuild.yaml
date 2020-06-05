@@ -42,8 +42,8 @@ steps:
       - --target=golang
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
-      - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
-      - --build-arg=GO_PROTOC_GEN_PACKAGES=${_GO_PROTOC_GEN_PACKAGES}
+      - --build-arg=PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
+      - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
 
   - id: golang-debug
     name: gcr.io/kaniko-project/executor:latest
@@ -59,21 +59,15 @@ steps:
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
-      - --build-arg=GO_PROTOC_GEN_PACKAGES=${_GO_PROTOC_GEN_PACKAGES}
+      - --build-arg=PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
+      - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
 
 substitutions:
   _PROTOC_VERSION: "3.12.2"
   _GOLANG_VERSION: "1.14"
   _ALPINE_VERSION: "3.11"
-  _GO_PROTOC_GEN_PACKAGES: "
-    github.com/envoyproxy/protoc-gen-validate@master
-    github.com/googleapis/gapic-generator-go/cmd/protoc-gen-go_cli@master
-    github.com/googleapis/gapic-generator-go/cmd/protoc-gen-go_gapic@master
-    github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway@master
-    github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger@master
-    github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@master
-    google.golang.org/grpc/cmd/protoc-gen-go-grpc@ad51f572fd27
-    google.golang.org/protobuf/cmd/protoc-gen-go@v1.24.0"
+  _PROTOC_GEN_GO_VERSION: "v1.24.0"
+  _PROTOC_GEN_GO_GRPC_VERSION: "ad51f572fd27"
 
 tags: 
   - "protoc-protoc"

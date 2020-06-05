@@ -28,14 +28,8 @@ protoc binary with Go protoc plugins container images.
 
 #### Go protoc plugins
 
-- [github.com/envoyproxy/protoc-gen-validate@master](https://github.com/envoyproxy/protoc-gen-validate)
-- [github.com/googleapis/gapic-generator-go/cmd/protoc-gen-go_cli@master](https://github.com/googleapis/gapic-generator-go/tree/master/cmd/protoc-gen-go_cli)
-- [github.com/googleapis/gapic-generator-go/cmd/protoc-gen-go_gapic@master](https://github.com/googleapis/gapic-generator-go/tree/master/cmd/protoc-gen-go_gapic)
-- [github.com/grpc-ecosystem/grpc-gateway/protoc-gen-grpc-gateway@master](https://github.com/grpc-ecosystem/grpc-gateway/tree/master/protoc-gen-grpc-gateway)
-- [github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger@master](https://github.com/grpc-ecosystem/grpc-gateway/tree/master/protoc-gen-swagger)
-- [github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc@master](https://github.com/pseudomuto/protoc-gen-doc)
-- [google.golang.org/grpc/cmd/protoc-gen-go-grpc@ad51f572fd27](https://github.com/grpc/grpc-go/tree/ad51f572fd27/cmd/protoc-gen-go-grpc)
 - [google.golang.org/protobuf/cmd/protoc-gen-go@v1.24.0](https://github.com/protocolbuffers/protobuf-go/tree/v1.24.0)
+- [google.golang.org/grpc/cmd/protoc-gen-go-grpc@ad51f572fd27](https://github.com/grpc/grpc-go/tree/ad51f572fd27/cmd/protoc-gen-go-grpc)
 
 
 ### `${PROTOC_VERSION}`
@@ -49,6 +43,3 @@ See [protocolbuffers/protobuf/releases][protocolbuffers/protobuf/releases].
 [protocolbuffers/protobuf]: https://github.com/protocolbuffers/protobuf
 [protocolbuffers/protobuf/releases]: https://github.com/protocolbuffers/protobuf/releases
 [gcr.io/distroless/base:nonroot]: https://github.com/GoogleContainerTools/distroless/tree/master/base
-
-<!-- badge links -->
-[cloud-build-status]: https://console.cloud.google.com/cloud-build/builds?project=containerz
