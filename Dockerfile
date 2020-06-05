@@ -1,3 +1,5 @@
+# syntax = docker.io/docker/dockerfile-upstream:master-experimental
+
 ARG GOLANG_VERSION
 ARG ALPINE_VERSION
 
