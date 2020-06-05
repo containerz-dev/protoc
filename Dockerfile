@@ -24,6 +24,7 @@ FROM gcr.io/distroless/static:nonroot AS protoc
 COPY --from=api-common-protos --chown=nonroot:nonroot /protos/google/ /usr/local/include/google/
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/bin/ /usr/local/bin/
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/include/google/protobuf/*.proto /usr/local/include/google/protobuf/
+USER nonroot:nonroot
 LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.title="containerz/protoc/protoc" \
       org.opencontainers.image.description="protoc container image" \
@@ -36,6 +37,7 @@ FROM gcr.io/distroless/base:debug-nonroot AS protoc-debug
 COPY --from=api-common-protos --chown=nonroot:nonroot /protos/google/ /usr/local/include/google/
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/bin/ /usr/local/bin/
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/include/google/protobuf/*.proto /usr/local/include/google/protobuf/
+USER nonroot:nonroot
 LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.title="containerz/protoc/protoc" \
       org.opencontainers.image.description="protoc container image" \
@@ -58,8 +60,10 @@ RUN set -eux && \
 
 # target: golang
 FROM gcr.io/distroless/static:nonroot AS golang
-COPY --from=protoc --chown=nonroot:nonroot /usr/local/ /usr/local/
 COPY --from=golang-builder --chown=nonroot:nonroot /out/ /
+COPY --from=protoc --chown=nonroot:nonroot /usr/local/bin/protoc /usr/local/bin/protoc
+COPY --from=protoc --chown=nonroot:nonroot /usr/local/include /usr/local/include/
+USER nonroot:nonroot
 LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.title="containerz/protoc/golang" \
       org.opencontainers.image.description="protoc with protoc-gen-go related binaries container image" \
@@ -69,8 +73,10 @@ ENTRYPOINT ["protoc"]
 
 # target: golang-debug
 FROM gcr.io/distroless/base:debug-nonroot AS golang-debug
-COPY --from=protoc-debug --chown=nonroot:nonroot /usr/local/ /usr/local/
 COPY --from=golang-builder --chown=nonroot:nonroot /out/ /
+COPY --from=protoc-debug --chown=nonroot:nonroot /usr/local/bin/protoc /usr/local/bin/protoc
+COPY --from=protoc-debug --chown=nonroot:nonroot /usr/local/include /usr/local/include/
+USER nonroot:nonroot
 LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.title="containerz/protoc/golang" \
       org.opencontainers.image.description="protoc with protoc-gen-go related binaries container image" \
