@@ -20,7 +20,7 @@ RUN set -eux && \
 FROM gcr.io/gapic-images/api-common-protos:latest AS api-common-protos
 
 # target: protoc
-FROM gcr.io/distroless/static:nonroot AS protoc
+FROM gcr.io/distroless/base:nonroot AS protoc
 COPY --from=api-common-protos --chown=nonroot:nonroot /protos/google/ /usr/local/include/google/
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/bin/ /usr/local/bin/
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/include/google/protobuf/*.proto /usr/local/include/google/protobuf/
@@ -59,7 +59,7 @@ RUN set -eux && \
 	GOBIN="${OUTDIR}/usr/local/bin" go get -u -v -tags='osusergo,netgo,static' -installsuffix='netgo' -gcflags="all=-trimpath=${GOPATH}" -ldflags="-d -s -w '-extldflags=-static -fno-PIC'" -asmflags="all=-trimpath=${GOPATH}" ${GO_PROTOC_GEN_PACKAGES}
 
 # target: golang
-FROM gcr.io/distroless/static:nonroot AS golang
+FROM gcr.io/distroless/base:nonroot AS golang
 COPY --from=golang-builder --chown=nonroot:nonroot /out/ /
 COPY --from=protoc --chown=nonroot:nonroot /usr/local/bin/protoc /usr/local/bin/protoc
 COPY --from=protoc --chown=nonroot:nonroot /usr/local/include /usr/local/include/

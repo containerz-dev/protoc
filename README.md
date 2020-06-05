@@ -10,10 +10,10 @@ protoc binary container images.
 
 - gcr.io/containerz/protoc/protoc:latest
 - gcr.io/containerz/protoc/protoc:${PROTOC_VERSION}
-    - `FROM` [gcr.io/distroless/static:nonroot][gcr.io/distroless/static:nonroot].
+    - `FROM` [gcr.io/distroless/base:nonroot][gcr.io/distroless/base:nonroot].
 - gcr.io/containerz/protoc/protoc:debug
 - gcr.io/containerz/protoc/protoc:${PROTOC_VERSION}-debug
-    - `FROM` [gcr.io/distroless/base:debug-nonroot][gcr.io/distroless/static:nonroot].
+    - `FROM` [gcr.io/distroless/base:debug-nonroot][gcr.io/distroless/base:nonroot].
 
 ### [gcr.io/containerz/protoc/golang][gcr.io/containerz/protoc/golang]
 
@@ -21,10 +21,10 @@ protoc binary with Go protoc plugins container images.
 
 - gcr.io/containerz/protoc/golang:latest
 - gcr.io/containerz/protoc/golang:${PROTOC_VERSION}
-    - `FROM` [gcr.io/distroless/static:nonroot][gcr.io/distroless/static:nonroot].
+    - `FROM` [gcr.io/distroless/base:nonroot][gcr.io/distroless/base:nonroot].
 - gcr.io/containerz/protoc/golang:debug
 - gcr.io/containerz/protoc/golang:${PROTOC_VERSION}-debug
-    - `FROM` [gcr.io/distroless/base:debug-nonroot][gcr.io/distroless/static:nonroot].
+    - `FROM` [gcr.io/distroless/base:debug-nonroot][gcr.io/distroless/base:nonroot].
 
 #### Go protoc plugins
 
@@ -48,7 +48,7 @@ See [protocolbuffers/protobuf/releases][protocolbuffers/protobuf/releases].
 [gcr.io/containerz/protoc/golang]: https://console.cloud.google.com/gcr/images/containerz/GLOBAL/protoc/golang
 [protocolbuffers/protobuf]: https://github.com/protocolbuffers/protobuf
 [protocolbuffers/protobuf/releases]: https://github.com/protocolbuffers/protobuf/releases
-[gcr.io/distroless/static:nonroot]: https://github.com/GoogleContainerTools/distroless/tree/master/base
+[gcr.io/distroless/base:nonroot]: https://github.com/GoogleContainerTools/distroless/tree/master/base
 
 <!-- badge links -->
 [cloud-build-status]: https://console.cloud.google.com/cloud-build/builds?project=containerz
