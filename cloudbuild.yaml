@@ -42,6 +42,7 @@ steps:
       - --target=golang
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
+      - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
       - --build-arg=PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
       - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
 
