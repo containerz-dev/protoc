@@ -28,11 +28,11 @@ COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/bin/ /usr/local/bin/
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/include/google/protobuf/*.proto /usr/local/include/google/protobuf/
 USER nonroot:nonroot
 LABEL maintainer="The containerz Authors" \
-      org.opencontainers.image.title="containerz/protoc/protoc" \
+      org.opencontainers.image.title="gcr.io/containerz/protoc/protoc" \
       org.opencontainers.image.description="protoc container image" \
       org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
       org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
-ENTRYPOINT ["protoc"]
+ENTRYPOINT ["protoc", "-I/usr/local/include"]
 
 # target: protoc-debug
 FROM gcr.io/distroless/base:debug-nonroot AS protoc-debug
@@ -41,11 +41,11 @@ COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/bin/ /usr/local/bin/
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/include/google/protobuf/*.proto /usr/local/include/google/protobuf/
 USER nonroot:nonroot
 LABEL maintainer="The containerz Authors" \
-      org.opencontainers.image.title="containerz/protoc/protoc" \
+      org.opencontainers.image.title="gcr.io/containerz/protoc/protoc:debug" \
       org.opencontainers.image.description="protoc container image" \
       org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
       org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
-ENTRYPOINT ["protoc"]
+ENTRYPOINT ["protoc", "-I/usr/local/include"]
 
 # target: golang-builder
 FROM docker.io/golang:${GOLANG_VERSION}-alpine${ALPINE_VERSION} AS golang-builder
@@ -59,7 +59,7 @@ RUN set -eux && \
 ARG PROTOC_GEN_GO_VERSION
 ARG PROTOC_GEN_GO_GRPC_VERSION
 RUN set -eux && \
-	GOBIN="${OUTDIR}/usr/local/bin" go get -a -u -v -tags='osusergo,netgo,static' -gcflags="all=-trimpath=${GOPATH}" -ldflags="-d -s -w '-extldflags=-static -fno-PIC'" -asmflags="all=-trimpath=${GOPATH}" -installsuffix='netgo' \
+	GOBIN="${OUTDIR}/usr/local/bin" go get -a -u -v -tags='osusergo,netgo,static' -gcflags="all=-trimpath=${GOPATH}" -ldflags="-d -s -w '-extldflags=-static'" -asmflags="all=-trimpath=${GOPATH}" -installsuffix='netgo' \
 		google.golang.org/protobuf/cmd/protoc-gen-go@${PROTOC_GEN_GO_VERSION} \
 		google.golang.org/grpc/cmd/protoc-gen-go-grpc@${PROTOC_GEN_GO_GRPC_VERSION}
 
@@ -70,11 +70,11 @@ COPY --from=protoc --chown=nonroot:nonroot /usr/local/bin/protoc /usr/local/bin/
 COPY --from=protoc --chown=nonroot:nonroot /usr/local/include /usr/local/include/
 USER nonroot:nonroot
 LABEL maintainer="The containerz Authors" \
-      org.opencontainers.image.title="containerz/protoc/golang" \
-      org.opencontainers.image.description="protoc with protoc-gen-go related binaries container image" \
+      org.opencontainers.image.title="gcr.io/containerz/protoc/golang" \
+      org.opencontainers.image.description="protoc and protoc-gen-go related binaries container image" \
       org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
       org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
-ENTRYPOINT ["protoc"]
+ENTRYPOINT ["protoc", "-I/usr/local/include"]
 
 # target: golang-debug
 FROM gcr.io/distroless/base:debug-nonroot AS golang-debug
@@ -83,8 +83,8 @@ COPY --from=protoc-debug --chown=nonroot:nonroot /usr/local/bin/protoc /usr/loca
 COPY --from=protoc-debug --chown=nonroot:nonroot /usr/local/include /usr/local/include/
 USER nonroot:nonroot
 LABEL maintainer="The containerz Authors" \
-      org.opencontainers.image.title="containerz/protoc/golang" \
-      org.opencontainers.image.description="protoc with protoc-gen-go related binaries container image" \
+      org.opencontainers.image.title="gcr.io/containerz/protoc/golang:debug" \
+      org.opencontainers.image.description="protoc and protoc-gen-go related binaries container image" \
       org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
       org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
-ENTRYPOINT ["protoc"]
+ENTRYPOINT ["protoc", "-I/usr/local/include"]
