@@ -18,14 +18,10 @@ RUN set -eux && \
 	unzip protoc-${PROTOC_VERSION}-linux-x86_64.zip -d protoc && \
 	rm protoc-${PROTOC_VERSION}-linux-x86_64.zip
 
-# target: api-common-protos
-FROM gcr.io/gapic-images/api-common-protos:latest AS api-common-protos
-
 # target: protoc
 FROM gcr.io/distroless/base:nonroot AS protoc
-COPY --from=api-common-protos --chown=nonroot:nonroot /protos/google/ /usr/local/include/google/
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/bin/ /usr/local/bin/
-COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/include/google/protobuf/*.proto /usr/local/include/google/protobuf/
+COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/include/google/ /usr/local/include/google
 USER nonroot:nonroot
 LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.title="gcr.io/containerz/protoc/protoc" \
@@ -36,9 +32,8 @@ ENTRYPOINT ["protoc", "-I/usr/local/include"]
 
 # target: protoc-debug
 FROM gcr.io/distroless/base:debug-nonroot AS protoc-debug
-COPY --from=api-common-protos --chown=nonroot:nonroot /protos/google/ /usr/local/include/google/
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/bin/ /usr/local/bin/
-COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/include/google/protobuf/*.proto /usr/local/include/google/protobuf/
+COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/include/google/ /usr/local/include/google
 USER nonroot:nonroot
 LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.title="gcr.io/containerz/protoc/protoc:debug" \
