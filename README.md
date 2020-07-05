@@ -2,6 +2,14 @@
 
 [protocolbuffers/protobuf][protocolbuffers/protobuf] container images.
 
+### protoc versions `${PROTOC_VERSION}`
+
+Supported:
+
+- [v3.12.3](https://github.com/protocolbuffers/protobuf/releases/v3.12.3)
+
+See also [protocolbuffers/protobuf/releases][protocolbuffers/protobuf/releases].
+
 ## Container images
 
 ### [gcr.io/containerz/protoc/protoc][gcr.io/containerz/protoc/protoc]
@@ -28,13 +36,8 @@ protoc binary with Go protoc plugins container images.
 
 #### Go protoc plugins
 
-- [google.golang.org/protobuf/cmd/protoc-gen-go@v1.24.0](https://github.com/protocolbuffers/protobuf-go/tree/v1.24.0)
-- [google.golang.org/grpc/cmd/protoc-gen-go-grpc@ad51f572fd27](https://github.com/grpc/grpc-go/tree/ad51f572fd27/cmd/protoc-gen-go-grpc)
-
-
-### `${PROTOC_VERSION}`
-
-See [protocolbuffers/protobuf/releases][protocolbuffers/protobuf/releases].
+- [google.golang.org/protobuf/cmd/protoc-gen-go@v1.25.0](https://github.com/protocolbuffers/protobuf-go/tree/v1.25.0)
+- [google.golang.org/grpc/cmd/protoc-gen-go-grpc@38aafd89f814 (v1.30.0-38aafd89f814)](https://github.com/grpc/grpc-go/tree/38aafd89f814/cmd/protoc-gen-go-grpc)
 
 
 <!-- links -->
