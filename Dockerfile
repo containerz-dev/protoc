@@ -28,7 +28,7 @@ LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.description="protoc container image" \
       org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
       org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
-ENTRYPOINT ["protoc", "-I/usr/local/include"]
+ENTRYPOINT ["protoc"]
 
 # target: protoc-debug
 FROM gcr.io/distroless/base:debug-nonroot AS protoc-debug
@@ -40,7 +40,7 @@ LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.description="protoc container image" \
       org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
       org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
-ENTRYPOINT ["protoc", "-I/usr/local/include"]
+ENTRYPOINT ["protoc"]
 
 # target: golang-builder
 FROM docker.io/golang:${GOLANG_VERSION}-alpine${ALPINE_VERSION} AS golang-builder
@@ -69,7 +69,7 @@ LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.description="protoc and protoc-gen-go related binaries container image" \
       org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
       org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
-ENTRYPOINT ["protoc", "-I/usr/local/include"]
+ENTRYPOINT ["protoc"]
 
 # target: golang-debug
 FROM gcr.io/distroless/base:debug-nonroot AS golang-debug
@@ -82,4 +82,4 @@ LABEL maintainer="The containerz Authors" \
       org.opencontainers.image.description="protoc and protoc-gen-go related binaries container image" \
       org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
       org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
-ENTRYPOINT ["protoc", "-I/usr/local/include"]
+ENTRYPOINT ["protoc"]
