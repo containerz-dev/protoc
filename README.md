@@ -37,7 +37,7 @@ protoc binary with Go protoc plugins container images.
 #### Go protoc plugins
 
 - [google.golang.org/protobuf/cmd/protoc-gen-go@v1.25.0](https://github.com/protocolbuffers/protobuf-go/tree/v1.25.0)
-- [google.golang.org/grpc/cmd/protoc-gen-go-grpc@38aafd89f814 (v1.30.0-38aafd89f814)](https://github.com/grpc/grpc-go/tree/38aafd89f814/cmd/protoc-gen-go-grpc)
+- [google.golang.org/grpc/cmd/protoc-gen-go-grpc@cee815dbe38c (v1.30.0-cee815dbe38c)](https://github.com/grpc/grpc-go/tree/cee815dbe38c/cmd/protoc-gen-go-grpc)
 
 
 <!-- links -->
