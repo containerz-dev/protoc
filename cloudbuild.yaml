@@ -2,11 +2,12 @@ steps:
   - id: protoc
     name: gcr.io/kaniko-project/executor:latest
     args:
-      - --cache=true
-      - --dockerfile=Dockerfile
-      - --context=dir:///workspace
       - --destination=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}
       - --destination=gcr.io/$PROJECT_ID/protoc/protoc:latest
+      - --cache=true
+      - --cache-repo=gcr.io/$PROJECT_ID/protoc/protoc/cache
+      - --dockerfile=Dockerfile
+      - --context=dir:///workspace
       - --reproducible
       - --skip-unused-stages=true
       - --target=protoc
@@ -17,11 +18,12 @@ steps:
   - id: protoc-debug
     name: gcr.io/kaniko-project/executor:latest
     args:
-      - --cache=true
-      - --dockerfile=Dockerfile
-      - --context=dir:///workspace
       - --destination=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}-debug
       - --destination=gcr.io/$PROJECT_ID/protoc/protoc:debug
+      - --cache=true
+      - --cache-repo=gcr.io/$PROJECT_ID/protoc/protoc/cache
+      - --dockerfile=Dockerfile
+      - --context=dir:///workspace
       - --reproducible
       - --skip-unused-stages=true
       - --target=protoc-debug
@@ -32,11 +34,12 @@ steps:
   - id: golang
     name: gcr.io/kaniko-project/executor:latest
     args:
-      - --cache=true
-      - --dockerfile=Dockerfile
-      - --context=dir:///workspace
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:latest
+      - --cache=true
+      - --cache-repo=gcr.io/$PROJECT_ID/protoc/golang/cache
+      - --dockerfile=Dockerfile
+      - --context=dir:///workspace
       - --reproducible
       - --skip-unused-stages=true
       - --target=golang
@@ -49,11 +52,12 @@ steps:
   - id: golang-debug
     name: gcr.io/kaniko-project/executor:latest
     args:
-      - --cache=true
-      - --dockerfile=Dockerfile
-      - --context=dir:///workspace
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-debug
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:debug
+      - --cache=true
+      - --cache-repo=gcr.io/$PROJECT_ID/protoc/golang/cache
+      - --dockerfile=Dockerfile
+      - --context=dir:///workspace
       - --reproducible
       - --skip-unused-stages=true
       - --target=golang-debug
