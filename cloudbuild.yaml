@@ -68,7 +68,7 @@ substitutions:
   _GOLANG_VERSION: "1.14"
   _ALPINE_VERSION: "3.12"
   _PROTOC_GEN_GO_VERSION: "v1.25.0"
-  _PROTOC_GEN_GO_GRPC_VERSION: "38aafd89f814" # v1.30.0-38aafd89f814
+  _PROTOC_GEN_GO_GRPC_VERSION: "cee815dbe38c" # v1.30.0-cee815dbe38c
 
 tags: 
   - "protoc-protoc"
