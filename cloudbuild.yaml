@@ -81,4 +81,4 @@ tags:
 options:
   machineType: "N1_HIGHCPU_8"
 
-timeout: 1800s
+timeout: 900s  # 15min
