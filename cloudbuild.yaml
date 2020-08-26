@@ -34,6 +34,7 @@ steps:
   - id: golang
     name: gcr.io/kaniko-project/executor:latest
     args:
+      - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_GOLANG_VERSION}-${_PROTOC_VERSION}
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:latest
       - --cache=true
@@ -52,6 +53,7 @@ steps:
   - id: golang-debug
     name: gcr.io/kaniko-project/executor:latest
     args:
+      - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_GOLANG_VERSION}-${_PROTOC_VERSION}-debug
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-debug
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:debug
       - --cache=true
