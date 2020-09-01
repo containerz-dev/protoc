@@ -77,10 +77,10 @@ substitutions:
   _PROTOC_GEN_GO_GRPC_VERSION: "bde0263672f0"  # v1.31.0
 
 tags: 
-  - "protoc-protoc"
-  - "protoc-golang"
+  - "protoc.protoc"
+  - "protoc.golang"
 
 options:
-  machineType: "N1_HIGHCPU_8"
+  machineType: "N1_HIGHCPU_32"
 
 timeout: 900s  # 15min
