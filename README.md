@@ -31,9 +31,11 @@ protoc binary with Go protoc plugins container images.
 
 - gcr.io/containerz/protoc/golang:latest
 - gcr.io/containerz/protoc/golang:${PROTOC_VERSION}
+- gcr.io/containerz/protoc/golang:${PROTOC_VERSION}-${GOLANG_VERSION}
     - `FROM` [gcr.io/distroless/base:nonroot][gcr.io/distroless/base:nonroot].
 - gcr.io/containerz/protoc/golang:debug
 - gcr.io/containerz/protoc/golang:${PROTOC_VERSION}-debug
+- gcr.io/containerz/protoc/golang:${PROTOC_VERSION}-${GOLANG_VERSION}-debug
     - `FROM` [gcr.io/distroless/base:debug-nonroot][gcr.io/distroless/base:nonroot].
 
 #### Go protoc plugins
