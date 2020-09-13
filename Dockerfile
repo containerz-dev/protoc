@@ -23,11 +23,12 @@ FROM gcr.io/distroless/base:nonroot AS protoc
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/bin/ /usr/local/bin/
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/include/google/ /usr/local/include/google
 USER nonroot:nonroot
-LABEL maintainer="The containerz Authors" \
-      org.opencontainers.image.title="gcr.io/containerz/protoc/protoc" \
-      org.opencontainers.image.description="protoc container image" \
-      org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
-      org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
+LABEL \
+	maintainer="The containerz Authors" \
+	org.opencontainers.image.title="gcr.io/containerz/protoc/protoc" \
+	org.opencontainers.image.description="protoc container image" \
+	org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
+	org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
 ENTRYPOINT ["protoc"]
 
 # target: protoc-debug
@@ -35,11 +36,12 @@ FROM gcr.io/distroless/base:debug-nonroot AS protoc-debug
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/bin/ /usr/local/bin/
 COPY --from=protoc-builder --chown=nonroot:nonroot /protoc/include/google/ /usr/local/include/google
 USER nonroot:nonroot
-LABEL maintainer="The containerz Authors" \
-      org.opencontainers.image.title="gcr.io/containerz/protoc/protoc:debug" \
-      org.opencontainers.image.description="protoc container image" \
-      org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
-      org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
+LABEL \
+	maintainer="The containerz Authors" \
+	org.opencontainers.image.title="gcr.io/containerz/protoc/protoc:debug" \
+	org.opencontainers.image.description="protoc container image" \
+	org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
+	org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
 ENTRYPOINT ["protoc"]
 
 # target: golang-builder
@@ -64,11 +66,12 @@ COPY --from=golang-builder --chown=nonroot:nonroot /out/ /
 COPY --from=protoc --chown=nonroot:nonroot /usr/local/bin/protoc /usr/local/bin/protoc
 COPY --from=protoc --chown=nonroot:nonroot /usr/local/include /usr/local/include/
 USER nonroot:nonroot
-LABEL maintainer="The containerz Authors" \
-      org.opencontainers.image.title="gcr.io/containerz/protoc/golang" \
-      org.opencontainers.image.description="protoc and protoc-gen-go related binaries container image" \
-      org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
-      org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
+LABEL \
+	maintainer="The containerz Authors" \
+	org.opencontainers.image.title="gcr.io/containerz/protoc/golang" \
+	org.opencontainers.image.description="protoc and protoc-gen-go related binaries container image" \
+	org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
+	org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
 ENTRYPOINT ["protoc"]
 
 # target: golang-debug
@@ -77,9 +80,10 @@ COPY --from=golang-builder --chown=nonroot:nonroot /out/ /
 COPY --from=protoc-debug --chown=nonroot:nonroot /usr/local/bin/protoc /usr/local/bin/protoc
 COPY --from=protoc-debug --chown=nonroot:nonroot /usr/local/include /usr/local/include/
 USER nonroot:nonroot
-LABEL maintainer="The containerz Authors" \
-      org.opencontainers.image.title="gcr.io/containerz/protoc/golang:debug" \
-      org.opencontainers.image.description="protoc and protoc-gen-go related binaries container image" \
-      org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
-      org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
+LABEL \
+	maintainer="The containerz Authors" \
+	org.opencontainers.image.title="gcr.io/containerz/protoc/golang:debug" \
+	org.opencontainers.image.description="protoc and protoc-gen-go related binaries container image" \
+	org.opencontainers.image.url="https://github.com/containerz-dev/protoc" \
+	org.opencontainers.image.source="git@github.com:containerz-dev/protoc" 
 ENTRYPOINT ["protoc"]
