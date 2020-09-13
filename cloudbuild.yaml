@@ -4,7 +4,7 @@ steps:
     args:
       - --destination=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}
       - --destination=gcr.io/$PROJECT_ID/protoc/protoc:latest
-      - --cache=true
+      - --cache=false
       - --cache-repo=gcr.io/$PROJECT_ID/protoc/protoc/cache
       - --dockerfile=Dockerfile
       - --context=dir:///workspace
@@ -20,7 +20,7 @@ steps:
     args:
       - --destination=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}-debug
       - --destination=gcr.io/$PROJECT_ID/protoc/protoc:debug
-      - --cache=true
+      - --cache=false
       - --cache-repo=gcr.io/$PROJECT_ID/protoc/protoc/cache
       - --dockerfile=Dockerfile
       - --context=dir:///workspace
@@ -37,7 +37,7 @@ steps:
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:latest
-      - --cache=true
+      - --cache=false
       - --cache-repo=gcr.io/$PROJECT_ID/protoc/golang/cache
       - --dockerfile=Dockerfile
       - --context=dir:///workspace
@@ -56,7 +56,7 @@ steps:
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}-debug
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-debug
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:debug
-      - --cache=true
+      - --cache=false
       - --cache-repo=gcr.io/$PROJECT_ID/protoc/golang/cache
       - --dockerfile=Dockerfile
       - --context=dir:///workspace
