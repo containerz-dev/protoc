@@ -56,7 +56,7 @@ RUN set -eux && \
 ARG PROTOC_GEN_GO_VERSION
 ARG PROTOC_GEN_GO_GRPC_VERSION
 RUN set -eux && \
-	GOBIN="${OUTDIR}/usr/local/bin" go get -a -u -v -tags='osusergo,netgo,static' -gcflags="all=-trimpath=${GOPATH}" -ldflags="-d -s -w '-extldflags=-static'" -asmflags="all=-trimpath=${GOPATH}" -installsuffix='netgo' \
+	GOBIN="${OUTDIR}/usr/local/bin" go get -u -v -trimpath -tags='osusergo,netgo,static' -gcflags="all=-trimpath=${GOPATH}" -ldflags="-d -s -w '-extldflags=-static'" -asmflags="all=-trimpath=${GOPATH}" -installsuffix='netgo' \
 		google.golang.org/protobuf/cmd/protoc-gen-go@${PROTOC_GEN_GO_VERSION} \
 		google.golang.org/grpc/cmd/protoc-gen-go-grpc@${PROTOC_GEN_GO_GRPC_VERSION}
 
