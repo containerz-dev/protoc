@@ -4,12 +4,13 @@ steps:
     args:
       - --destination=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}
       - --destination=gcr.io/$PROJECT_ID/protoc/protoc:latest
-      - --cache=false
+      - --cache=true
       - --cache-repo=gcr.io/$PROJECT_ID/protoc/protoc/cache
       - --dockerfile=Dockerfile
       - --context=dir:///workspace
       - --reproducible
       - --skip-unused-stages=true
+      - --use-new-run
       - --target=protoc
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
@@ -20,12 +21,13 @@ steps:
     args:
       - --destination=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}-debug
       - --destination=gcr.io/$PROJECT_ID/protoc/protoc:debug
-      - --cache=false
+      - --cache=true
       - --cache-repo=gcr.io/$PROJECT_ID/protoc/protoc/cache
       - --dockerfile=Dockerfile
       - --context=dir:///workspace
       - --reproducible
       - --skip-unused-stages=true
+      - --use-new-run
       - --target=protoc-debug
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
@@ -37,12 +39,13 @@ steps:
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:latest
-      - --cache=false
+      - --cache=true
       - --cache-repo=gcr.io/$PROJECT_ID/protoc/golang/cache
       - --dockerfile=Dockerfile
       - --context=dir:///workspace
       - --reproducible
       - --skip-unused-stages=true
+      - --use-new-run
       - --target=golang
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
@@ -56,12 +59,13 @@ steps:
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}-debug
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-debug
       - --destination=gcr.io/$PROJECT_ID/protoc/golang:debug
-      - --cache=false
+      - --cache=true
       - --cache-repo=gcr.io/$PROJECT_ID/protoc/golang/cache
       - --dockerfile=Dockerfile
       - --context=dir:///workspace
       - --reproducible
       - --skip-unused-stages=true
+      - --use-new-run
       - --target=golang-debug
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
