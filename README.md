@@ -6,9 +6,10 @@
 
 Supported:
 
-- [v3.13.0](https://github.com/protocolbuffers/protobuf/releases/v3.13.0)
-- [v3.12.4](https://github.com/protocolbuffers/protobuf/releases/v3.12.4)
 - [v3.12.3](https://github.com/protocolbuffers/protobuf/releases/v3.12.3)
+- [v3.12.4](https://github.com/protocolbuffers/protobuf/releases/v3.12.4)
+- [v3.13.0](https://github.com/protocolbuffers/protobuf/releases/v3.13.0)
+- [v3.14.0](https://github.com/protocolbuffers/protobuf/releases/v3.14.0)
 
 See also [protocolbuffers/protobuf/releases][protocolbuffers/protobuf/releases].
 
