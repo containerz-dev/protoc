@@ -90,7 +90,4 @@ tags:
   - "protoc.protoc"
   - "protoc.golang"
 
-options:
-  machineType: "N1_HIGHCPU_32"
-
 timeout: 900s  # 15min
