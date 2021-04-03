@@ -11,6 +11,7 @@ Supported:
 - [v3.13.0](https://github.com/protocolbuffers/protobuf/releases/v3.13.0)
 - [v3.14.0](https://github.com/protocolbuffers/protobuf/releases/v3.14.0)
 - [v3.15.0](https://github.com/protocolbuffers/protobuf/releases/v3.15.0)
+- [v3.15.1](https://github.com/protocolbuffers/protobuf/releases/v3.15.1)
 
 See also [protocolbuffers/protobuf/releases][protocolbuffers/protobuf/releases].
 
