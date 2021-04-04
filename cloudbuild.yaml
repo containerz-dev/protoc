@@ -9,9 +9,10 @@ steps:
       - --dockerfile=Dockerfile
       - --context=dir:///workspace
       - --reproducible
+      - --log-timestamp
       - --skip-unused-stages=true
-      - --use-new-run
       - --target=protoc
+      - --use-new-run
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
@@ -27,9 +28,10 @@ steps:
       - --dockerfile=Dockerfile
       - --context=dir:///workspace
       - --reproducible
+      - --log-timestamp
       - --skip-unused-stages=true
-      - --use-new-run
       - --target=protoc-debug
+      - --use-new-run
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
@@ -46,9 +48,10 @@ steps:
       - --dockerfile=Dockerfile
       - --context=dir:///workspace
       - --reproducible
+      - --log-timestamp
       - --skip-unused-stages=true
-      - --use-new-run
       - --target=golang
+      - --use-new-run
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
@@ -68,9 +71,10 @@ steps:
       - --dockerfile=Dockerfile
       - --context=dir:///workspace
       - --reproducible
+      - --log-timestamp
       - --skip-unused-stages=true
-      - --use-new-run
       - --target=golang-debug
+      - --use-new-run
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
@@ -80,7 +84,7 @@ steps:
       - protoc-debug
 
 substitutions:
-  _PROTOC_VERSION: "3.15.3"
+  _PROTOC_VERSION: "3.15.4"
   _GOLANG_VERSION: "1.16"
   _ALPINE_VERSION: "3.13"
   _PROTOC_GEN_GO_VERSION: "v1.25.0"
