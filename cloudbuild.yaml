@@ -80,7 +80,7 @@ steps:
       - protoc-debug
 
 substitutions:
-  _PROTOC_VERSION: "3.15.3"
+  _PROTOC_VERSION: "3.15.4"
   _GOLANG_VERSION: "1.16"
   _ALPINE_VERSION: "3.13"
   _PROTOC_GEN_GO_VERSION: "v1.25.0"
