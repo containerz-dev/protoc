@@ -1,3 +1,5 @@
 #!include:.dockerignore
+
 !cloudbuild.*.yaml
 !Dockerfile
+!hack/
