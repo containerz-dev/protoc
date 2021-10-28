@@ -23,8 +23,6 @@ steps:
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
-      - --allow=network.host
-      - --network=host
       - .
     waitFor: ["docker"]
 
@@ -39,8 +37,6 @@ steps:
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
       - --output=type=image,name=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION},push=false
-      - --allow=network.host
-      - --network=host
       - .
     waitFor:
       - "protoc-builder"
@@ -56,8 +52,6 @@ steps:
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
       - --output=type=image,name=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}-debug,push=false
-      - --allow=network.host
-      - --network=host
       - .
     waitFor:
       - "protoc-builder"
@@ -74,8 +68,6 @@ steps:
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
       - --build-arg=PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
       - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
-      - --allow=network.host
-      - --network=host
       - .
     waitFor:
       - "protoc"
@@ -95,8 +87,6 @@ steps:
       - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
       - --tag=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}
       - --tag=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}
-      - --allow=network.host
-      - --network=host
       - .
     waitFor:
       - "golang-builder"
@@ -115,8 +105,6 @@ steps:
       - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
       - --tag=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}-debug
       - --tag=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-debug
-      - --allow=network.host
-      - --network=host
       - .
     waitFor:
       - "golang-builder"
