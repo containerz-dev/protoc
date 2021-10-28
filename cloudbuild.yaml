@@ -1,5 +1,5 @@
 steps:
-  - id: docker
+  - id: docker_buildx
     name: docker:20.10
     args:
       - build
@@ -11,7 +11,22 @@ steps:
       - hack/dockerfiles
     env:
       - "DOCKER_BUILDKIT=1"
-    waitFor: ["-"]
+    waitFor:
+      - "-"
+
+  - id: bootstrap_buildx
+    name: docker-buildx:cloudbuild
+    args:
+      - buildx
+      - create
+      - --bootstrap
+      - --name=cloudbuild
+      - --driver=docker-container
+      - --driver-opt=image=moby/buildkit:nightly
+      - --driver-opt=network=cloudbuild
+      - --use
+    waitFor:
+      - "docker_buildx"
 
   - id: protoc-builder
     name: docker-buildx:cloudbuild
@@ -23,8 +38,11 @@ steps:
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
+      - --cache-from=type=registry,ref=gcr.io/$PROJECT_ID/protoc/protoc-builder:cloudbuild_cache
+      - --output=type=image,name=gcr.io/$PROJECT_ID/protoc/protoc-builder:cloudbuild_cache,push=true
       - .
-    waitFor: ["docker"]
+    waitFor:
+      - "bootstrap_buildx"
 
   - id: protoc
     name: docker-buildx:cloudbuild
@@ -32,11 +50,11 @@ steps:
       - buildx
       - build
       - --target=protoc
-      - --build-arg=BUILDKIT_INLINE_CACHE=1
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
-      - --output=type=image,name=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION},push=false
+      - --tag=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}
+      - --load
       - .
     waitFor:
       - "protoc-builder"
@@ -47,11 +65,11 @@ steps:
       - buildx
       - build
       - --target=protoc-debug
-      - --build-arg=BUILDKIT_INLINE_CACHE=1
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
-      - --output=type=image,name=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}-debug,push=false
+      - --tag=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}-debug
+      - --load
       - .
     waitFor:
       - "protoc-builder"
@@ -68,6 +86,8 @@ steps:
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
       - --build-arg=PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
       - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
+      - --cache-from=type=registry,ref=gcr.io/$PROJECT_ID/protoc/golang-builder:cloudbuild_cache
+      - --output=type=image,name=gcr.io/$PROJECT_ID/protoc/golang-builder:cloudbuild_cache,push=true
       - .
     waitFor:
       - "protoc"
@@ -79,14 +99,13 @@ steps:
       - buildx
       - build
       - --target=golang
-      - --build-arg=BUILDKIT_INLINE_CACHE=1
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
       - --build-arg=PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
       - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
-      - --tag=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}
-      - --tag=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}
+      - --tag="gcr.io/$PROJECT_ID/protoc/golang:${_PR_NUMBER:-${_PROTOC_VERSION}-${_GOLANG_VERSION}}"
+      - --load
       - .
     waitFor:
       - "golang-builder"
@@ -97,14 +116,13 @@ steps:
       - buildx
       - build
       - --target=golang-debug
-      - --build-arg=BUILDKIT_INLINE_CACHE=1
       - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
       - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
       - --build-arg=PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
       - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
-      - --tag=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}-debug
-      - --tag=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-debug
+      - --tag="gcr.io/$PROJECT_ID/protoc/golang:${_PR_NUMBER:-${_PROTOC_VERSION}-${_GOLANG_VERSION}}-debug"
+      - --load
       - .
     waitFor:
       - "golang-builder"
@@ -118,13 +136,11 @@ substitutions:
   _PROTOC_GEN_GO_VERSION: "v1.27.1"  # https://github.com/protocolbuffers/protobuf-go/releases/tag/v1.27.1
   _PROTOC_GEN_GO_GRPC_VERSION: "9c668aeab869"  # https://github.com/grpc/grpc-go/tree/9c668aeab869
 
-images:
-  - "gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}"
-  - "gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}-debug"
-  - "gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}"
-  - "gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}"
-  - "gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}-debug"
-  - "gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-debug"
+# images:
+#   - "gcr.io/$PROJECT_ID/protoc/protoc:${_PR_NUMBER:-${_PROTOC_VERSION}}"
+#   - "gcr.io/$PROJECT_ID/protoc/protoc:${_PR_NUMBER:-${_PROTOC_VERSION}}-debug"
+#   - "gcr.io/$PROJECT_ID/protoc/golang:${_PR_NUMBER:-${_PROTOC_VERSION}-${_GOLANG_VERSION}}"
+#   - "gcr.io/$PROJECT_ID/protoc/golang:${_PR_NUMBER:-${_PROTOC_VERSION}-${_GOLANG_VERSION}}-debug"
 
 tags:
   - "protoc.protoc"
