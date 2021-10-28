@@ -47,7 +47,8 @@ ENV \
 RUN set -eux && \
 	apk add --no-cache \
 		build-base \
-		git
+		git \
+		musl-dev
 ARG PROTOC_GEN_GO_VERSION
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache \
 	set -eux && \
