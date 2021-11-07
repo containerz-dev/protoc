@@ -104,7 +104,7 @@ steps:
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
       - --build-arg=PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
       - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
-      - --tag="gcr.io/$PROJECT_ID/protoc/golang:${_PR_NUMBER:-${_PROTOC_VERSION}-${_GOLANG_VERSION}}"
+      - --tag=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}
       - --load
       - .
     waitFor:
@@ -121,7 +121,7 @@ steps:
       - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
       - --build-arg=PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
       - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
-      - --tag="gcr.io/$PROJECT_ID/protoc/golang:${_PR_NUMBER:-${_PROTOC_VERSION}-${_GOLANG_VERSION}}-debug"
+      - --tag=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}-debug
       - --load
       - .
     waitFor:

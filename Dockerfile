@@ -46,8 +46,10 @@ ENV \
 	GO111MODULE=on
 RUN set -eux && \
 	apk add --no-cache \
-		build-base \
+		binutils \
+		gcc \
 		git \
+		libc-dev \
 		musl-dev
 ARG PROTOC_GEN_GO_VERSION
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache \
