@@ -5,7 +5,7 @@ steps:
       - build
       - --target=docker
       - --build-arg=DOCKER_VERSION=${_DOCKER_VERSION}
-      - --build-arg=BUILDX_DIGEST=${_BUILDX_DIGEST}
+      - --build-arg=BUILDX_VERSION=${_BUILDX_VERSION}
       - --tag=docker-buildx:cloudbuild
       - --file=hack/dockerfiles/buildx.dockerfile
       - hack/dockerfiles
@@ -129,7 +129,7 @@ steps:
 
 substitutions:
   _DOCKER_VERSION: "20.10"
-  _BUILDX_DIGEST: "2ec838c5f74e1cdd5e6ea4e789c0c0f5573807550b50b2ddc6deb2c2033a286b"  # https://github.com/docker/buildx/tree/084b6c0a95ce, https://github.com/docker/buildx/runs/3947339794
+  _BUILDX_VERSION: "0.7.0-rc1"  # https://github.com/docker/buildx/releases/tag/v0.7.0-rc1
   _PROTOC_VERSION: "3.19.0"  # https://github.com/protocolbuffers/protobuf/releases/tag/v3.19.0
   _GOLANG_VERSION: "1.17"
   _ALPINE_VERSION: "3.14"
