@@ -54,12 +54,12 @@ RUN set -eux && \
 ARG PROTOC_GEN_GO_VERSION
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache \
 	set -eux && \
-	GOBIN="${OUTDIR}/usr/local/bin" go install -v -tags='osusergo,netgo,static,static_build' -buildmode=pie -ldflags='-s -w -d -linkmode external "-extldflags=-static-pie"' -installsuffix='netgo' \
+	GOBIN="${OUTDIR}/usr/local/bin" go install -v -tags='osusergo,netgo,static,static_build' -buildmode=pie -ldflags='-s -w -d -linkmode external -buildid= "-extldflags=-static-pie"' -installsuffix='netgo' \
 		google.golang.org/protobuf/cmd/protoc-gen-go@${PROTOC_GEN_GO_VERSION}
 ARG PROTOC_GEN_GO_GRPC_VERSION
 RUN --mount=type=cache,target=/go/pkg/mod --mount=type=cache,target=/root/.cache \
 	set -eux && \
-	GOBIN="${OUTDIR}/usr/local/bin" go install -v -tags='osusergo,netgo,static,static_build' -buildmode=pie -ldflags='-s -w -d -linkmode external "-extldflags=-static-pie"' -installsuffix='netgo' \
+	GOBIN="${OUTDIR}/usr/local/bin" go install -v -tags='osusergo,netgo,static,static_build' -buildmode=pie -ldflags='-s -w -d -linkmode external -buildid= "-extldflags=-static-pie"' -installsuffix='netgo' \
 		google.golang.org/grpc/cmd/protoc-gen-go-grpc@${PROTOC_GEN_GO_GRPC_VERSION}
 
 FROM gcr.io/distroless/base:nonroot AS golang

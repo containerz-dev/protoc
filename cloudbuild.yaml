@@ -1,146 +1,158 @@
 steps:
-  - id: docker_buildx
+  - id: buildkit
     name: docker:20.10
-    args:
-      - build
-      - --target=docker
-      - --build-arg=DOCKER_VERSION=${_DOCKER_VERSION}
-      - --build-arg=BUILDX_VERSION=${_BUILDX_VERSION}
-      - --tag=docker-buildx:cloudbuild
-      - --file=hack/dockerfiles/buildx.dockerfile
-      - hack/dockerfiles
     env:
       - "DOCKER_BUILDKIT=1"
+    entrypoint: "docker"
+    args:
+      - image
+      - build
+      - --build-arg=DOCKER_VERSION=${_DOCKER_VERSION}
+      - --build-arg=BUILDKIT_VERSION=${_BUILDKIT_VERSION}
+      - -t
+      - buildkit:cloudbuild
+      - --target=buildkit
+      - --file=./hack/dockerfiles/buildkit.dockerfile
+      - ./hack/dockerfiles
     waitFor:
       - "-"
 
-  - id: bootstrap_buildx
-    name: docker-buildx:cloudbuild
+  - id: bootstrap_buildkitd
+    name: buildkit:cloudbuild
+    entrypoint: "docker"
     args:
-      - buildx
-      - create
-      - --bootstrap
-      - --name=cloudbuild
-      - --driver=docker-container
-      - --driver-opt=image=moby/buildkit:nightly
-      - --driver-opt=network=cloudbuild
-      - --use
+      - container
+      - run
+      - --detach
+      - --privileged
+      - --name=buildkitd
+      - --network=cloudbuild
+      - moby/buildkit:${_BUILDKIT_VERSION}
     waitFor:
-      - "docker_buildx"
+      - "buildkit"
 
   - id: protoc-builder
-    name: docker-buildx:cloudbuild
+    name: buildkit:cloudbuild
+    entrypoint: "buildctl"
     args:
-      - buildx
+      - --addr=docker-container://buildkitd
       - build
-      - --target=protoc-builder
-      - --build-arg=BUILDKIT_INLINE_CACHE=1
-      - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
-      - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
-      - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
-      - --cache-from=type=registry,ref=gcr.io/$PROJECT_ID/protoc/protoc-builder:cloudbuild_cache
-      - --output=type=image,name=gcr.io/$PROJECT_ID/protoc/protoc-builder:cloudbuild_cache,push=true
-      - .
+      - --frontend=dockerfile.v0
+      - --local=context=/workspace
+      - --local=dockerfile=/workspace
+      - --opt=target=protoc-builder
+      - --opt=build-arg:PROTOC_VERSION=${_PROTOC_VERSION}
+      - --opt=build-arg:GOLANG_VERSION=${_GOLANG_VERSION}
+      - --opt=build-arg:ALPINE_VERSION=${_ALPINE_VERSION}
+      - --export-cache=type=inline
+      - --import-cache=type=registry,ref=gcr.io/$PROJECT_ID/protoc/protoc-builder:cloudbuild_cache
     waitFor:
-      - "bootstrap_buildx"
+      - "bootstrap_buildkitd"
 
   - id: protoc
-    name: docker-buildx:cloudbuild
+    name: buildkit:cloudbuild
+    entrypoint: "buildctl"
     args:
-      - buildx
+      - --addr=docker-container://buildkitd
       - build
-      - --target=protoc
-      - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
-      - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
-      - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
-      - --tag=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}
-      - --load
-      - .
+      - --frontend=dockerfile.v0
+      - --local=context=/workspace
+      - --local=dockerfile=/workspace
+      - --opt=target=protoc
+      - --opt=build-arg:PROTOC_VERSION=${_PROTOC_VERSION}
+      - --opt=build-arg:GOLANG_VERSION=${_GOLANG_VERSION}
+      - --opt=build-arg:ALPINE_VERSION=${_ALPINE_VERSION}
+      - --output=type=image,name=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION},push=true,oci-mediatypes=true,compression=estargz
+      - --import-cache=type=registry,ref=gcr.io/$PROJECT_ID/protoc/protoc-builder:cloudbuild_cache
     waitFor:
       - "protoc-builder"
 
   - id: protoc-debug
-    name: docker-buildx:cloudbuild
+    name: buildkit:cloudbuild
+    entrypoint: "buildctl"
     args:
-      - buildx
+      - --addr=docker-container://buildkitd
       - build
-      - --target=protoc-debug
-      - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
-      - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
-      - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
-      - --tag=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}-debug
-      - --load
-      - .
+      - --frontend=dockerfile.v0
+      - --local=context=/workspace
+      - --local=dockerfile=/workspace
+      - --opt=target=protoc-debug
+      - --opt=build-arg:PROTOC_VERSION=${_PROTOC_VERSION}
+      - --opt=build-arg:GOLANG_VERSION=${_GOLANG_VERSION}
+      - --opt=build-arg:ALPINE_VERSION=${_ALPINE_VERSION}
+      - --output=type=image,name=gcr.io/$PROJECT_ID/protoc/protoc:${_PROTOC_VERSION}-debug,push=true,oci-mediatypes=true,compression=estargz
+      - --import-cache=type=registry,ref=gcr.io/$PROJECT_ID/protoc/protoc-builder:cloudbuild_cache
     waitFor:
       - "protoc-builder"
 
   - id: golang-builder
-    name: docker-buildx:cloudbuild
+    name: buildkit:cloudbuild
+    entrypoint: "buildctl"
     args:
-      - buildx
+      - --addr=docker-container://buildkitd
       - build
-      - --target=golang-builder
-      - --build-arg=BUILDKIT_INLINE_CACHE=1
-      - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
-      - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
-      - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
-      - --build-arg=PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
-      - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
-      - --cache-from=type=registry,ref=gcr.io/$PROJECT_ID/protoc/golang-builder:cloudbuild_cache
-      - --output=type=image,name=gcr.io/$PROJECT_ID/protoc/golang-builder:cloudbuild_cache,push=true
-      - .
-    waitFor:
-      - "protoc"
-      - "protoc-debug"
+      - --frontend=dockerfile.v0
+      - --local=context=/workspace
+      - --local=dockerfile=/workspace
+      - --opt=target=golang-builder
+      - --opt=build-arg:PROTOC_VERSION=${_PROTOC_VERSION}
+      - --opt=build-arg:GOLANG_VERSION=${_GOLANG_VERSION}
+      - --opt=build-arg:ALPINE_VERSION=${_ALPINE_VERSION}
+      - --opt=build-arg:PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
+      - --opt=build-arg:PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
+      - --export-cache=type=inline
+      - --import-cache=type=registry,ref=gcr.io/$PROJECT_ID/protoc/protoc-builder:cloudbuild_cache
 
   - id: golang
-    name: docker-buildx:cloudbuild
+    name: buildkit:cloudbuild
+    entrypoint: "buildctl"
     args:
-      - buildx
+      - --addr=docker-container://buildkitd
       - build
-      - --target=golang
-      - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
-      - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
-      - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
-      - --build-arg=PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
-      - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
-      - --tag=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}
-      - --load
-      - .
+      - --frontend=dockerfile.v0
+      - --local=context=/workspace
+      - --local=dockerfile=/workspace
+      - --opt=target=golang
+      - --opt=build-arg:PROTOC_VERSION=${_PROTOC_VERSION}
+      - --opt=build-arg:GOLANG_VERSION=${_GOLANG_VERSION}
+      - --opt=build-arg:ALPINE_VERSION=${_ALPINE_VERSION}
+      - --opt=build-arg:PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
+      - --opt=build-arg:PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
+      - --output=type=image,name=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION},push=true,oci-mediatypes=true,compression=estargz
+      - --import-cache=type=registry,ref=gcr.io/$PROJECT_ID/protoc/cache/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}:cloudbuild_cache
     waitFor:
+      - "protoc"
       - "golang-builder"
 
   - id: golang-debug
-    name: docker-buildx:cloudbuild
+    name: buildkit:cloudbuild
+    entrypoint: "buildctl"
     args:
-      - buildx
+      - --addr=docker-container://buildkitd
       - build
-      - --target=golang-debug
-      - --build-arg=PROTOC_VERSION=${_PROTOC_VERSION}
-      - --build-arg=GOLANG_VERSION=${_GOLANG_VERSION}
-      - --build-arg=ALPINE_VERSION=${_ALPINE_VERSION}
-      - --build-arg=PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
-      - --build-arg=PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
-      - --tag=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}-debug
-      - --load
-      - .
+      - --frontend=dockerfile.v0
+      - --local=context=/workspace
+      - --local=dockerfile=/workspace
+      - --opt=target=golang-debug
+      - --opt=build-arg:PROTOC_VERSION=${_PROTOC_VERSION}
+      - --opt=build-arg:GOLANG_VERSION=${_GOLANG_VERSION}
+      - --opt=build-arg:ALPINE_VERSION=${_ALPINE_VERSION}
+      - --opt=build-arg:PROTOC_GEN_GO_VERSION=${_PROTOC_GEN_GO_VERSION}
+      - --opt=build-arg:PROTOC_GEN_GO_GRPC_VERSION=${_PROTOC_GEN_GO_GRPC_VERSION}
+      - --output=type=image,name=gcr.io/$PROJECT_ID/protoc/golang:${_PROTOC_VERSION}-${_GOLANG_VERSION}-debug,push=true,oci-mediatypes=true,compression=estargz
+      - --import-cache=type=registry,ref=gcr.io/$PROJECT_ID/protoc/protoc-builder:cloudbuild_cache
     waitFor:
+      - "protoc-debug"
       - "golang-builder"
 
 substitutions:
   _DOCKER_VERSION: "20.10"
-  _BUILDX_VERSION: "0.7.0-rc1"  # https://github.com/docker/buildx/releases/tag/v0.7.0-rc1
-  _PROTOC_VERSION: "3.19.0"  # https://github.com/protocolbuffers/protobuf/releases/tag/v3.19.0
+  _BUILDKIT_VERSION: "v0.10.0"
+  _PROTOC_VERSION: "3.19.4"  # https://github.com/protocolbuffers/protobuf/releases/tag/v3.19.0
   _GOLANG_VERSION: "1.17"
-  _ALPINE_VERSION: "3.14"
+  _ALPINE_VERSION: "3.15"
   _PROTOC_GEN_GO_VERSION: "v1.27.1"  # https://github.com/protocolbuffers/protobuf-go/releases/tag/v1.27.1
   _PROTOC_GEN_GO_GRPC_VERSION: "9c668aeab869"  # https://github.com/grpc/grpc-go/tree/9c668aeab869
-
-# images:
-#   - "gcr.io/$PROJECT_ID/protoc/protoc:${_PR_NUMBER:-${_PROTOC_VERSION}}"
-#   - "gcr.io/$PROJECT_ID/protoc/protoc:${_PR_NUMBER:-${_PROTOC_VERSION}}-debug"
-#   - "gcr.io/$PROJECT_ID/protoc/golang:${_PR_NUMBER:-${_PROTOC_VERSION}-${_GOLANG_VERSION}}"
-#   - "gcr.io/$PROJECT_ID/protoc/golang:${_PR_NUMBER:-${_PROTOC_VERSION}-${_GOLANG_VERSION}}-debug"
 
 tags:
   - "protoc.protoc"
